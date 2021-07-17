@@ -49,7 +49,7 @@ def make_slack_message_blocks(reddit):
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "Pulled from Reddit's <{}|{}>.".format(
+                "text": "Pulled from the <{}|{}> subreddit".format(
                     'https://www.reddit.com{}'.format(reddit['data']['permalink']),
                     reddit['data']['subreddit'])
             }
