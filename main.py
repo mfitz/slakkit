@@ -86,6 +86,7 @@ def choose_a_reddit(reddit_list):
         if reddit['data']['title'] \
                 and reddit['data']['url_overridden_by_dest'] \
                 and not reddit['data']['is_video'] \
+                and ('is_gif' not in reddit['data'] or not reddit['data']['is_gif']) \
                 and ('is_gallery' not in reddit['data'] or not reddit['data']['is_gallery']):
             print("Selected a reddit from the list of reddits: {}".format(reddit))
             return reddit
