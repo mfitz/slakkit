@@ -7,6 +7,19 @@ import requests
 import slack
 
 
+def lambda_handler(event, context):
+    print("Reading SlackIt configuration from env vars....")
+    target_channel = os.environ.get('slackit_TARGET_CHANNEL')
+    oauth_secret_name = os.environ.get('slackit_OAUTH_SECRET_NAME')
+    slack_oauth_token = get_secret(oauth_secret_name).get('api_key')
+    subreddit_list = os.environ.get('slackit_SUBREDDIT_LIST').split(',')
+
+    reddits = get_random_reddits(subreddit_list)
+    reddit = choose_a_reddit(reddits['data']['children'])
+    slack_blocks = make_slack_message_blocks(reddit)
+    send_slack_message(target_channel, slack_oauth_token, slack_blocks)
+
+
 def get_secret(secret_name):
     client = boto3.client('secretsmanager')
     print("Looking for secret '{}' in Secrets Manager".format(secret_name))
@@ -81,13 +94,4 @@ def choose_a_reddit(reddit_list):
 
 
 if __name__ == '__main__':
-    print("Reading SlackIt configuration from env vars....")
-    target_channel = os.environ.get('slackit_TARGET_CHANNEL')
-    oauth_secret_name = os.environ.get('slackit_OAUTH_SECRET_NAME')
-    slack_oauth_token = get_secret(oauth_secret_name).get('api_key')
-    subreddit_list = os.environ.get('slackit_SUBREDDIT_LIST').split(',')
-
-    reddits = get_random_reddits(subreddit_list)
-    reddit = choose_a_reddit(reddits['data']['children'])
-    slack_blocks = make_slack_message_blocks(reddit)
-    send_slack_message(target_channel, slack_oauth_token, blocks=slack_blocks)
+    lambda_handler('Command line event', 'Command line context')
