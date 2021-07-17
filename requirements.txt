@@ -1,0 +1,3 @@
+boto3==1.18.1
+requests==2.26.0
+slackclient==2.9.3
