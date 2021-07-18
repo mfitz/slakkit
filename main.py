@@ -8,11 +8,11 @@ import slack
 
 
 def lambda_handler(event, context):
-    print("Reading SlackIt configuration from env vars....")
-    target_channel = os.environ.get('slackit_TARGET_CHANNEL')
-    oauth_secret_name = os.environ.get('slackit_OAUTH_SECRET_NAME')
+    print("Reading Slakkit configuration from env vars....")
+    target_channel = os.environ.get('slakkit_TARGET_CHANNEL')
+    oauth_secret_name = os.environ.get('slakkit_OAUTH_SECRET_NAME')
     slack_oauth_token = get_secret(oauth_secret_name).get('api_key')
-    subreddit_list = os.environ.get('slackit_SUBREDDIT_LIST').split(',')
+    subreddit_list = os.environ.get('slakkit_SUBREDDIT_LIST').split(',')
 
     reddits = get_random_reddits(subreddit_list)
     reddit = choose_a_reddit(reddits['data']['children'])
