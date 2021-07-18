@@ -17,6 +17,7 @@ def lambda_handler(event, context):
     reddits = get_random_reddits(subreddit_list)
     reddit = choose_a_reddit(reddits['data']['children'])
     slack_blocks = make_slack_message_blocks(reddit)
+    print("Slack blocks:\n{}".format(slack_blocks))
     send_slack_message(target_channel, slack_oauth_token, slack_blocks)
 
 
@@ -43,7 +44,7 @@ def make_slack_message_blocks(reddit):
         {
             "type": "image",
             "image_url": "{}".format(reddit['data']['url_overridden_by_dest']),
-            "alt_text": "marg"
+            "alt_text": "image"
         },
         {
             "type": "section",
@@ -85,6 +86,7 @@ def choose_a_reddit(reddit_list):
     for reddit in reddit_list:
         if reddit['data']['title'] \
                 and reddit['data']['url_overridden_by_dest'] \
+                and reddit['data']['post_hint'] == 'image' \
                 and not reddit['data']['is_video'] \
                 and ('is_gif' not in reddit['data'] or not reddit['data']['is_gif']) \
                 and ('is_gallery' not in reddit['data'] or not reddit['data']['is_gallery']):
