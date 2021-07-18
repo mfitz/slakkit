@@ -75,7 +75,7 @@ def get_random_reddits(subreddit_list):
     print("Retrieving top posts from {}".format(subreddit))
     url = "https://www.reddit.com/r/{}/top.json?limit=30&t=month".format(subreddit)
     print("Requesting {}".format(url))
-    response = requests.get(url, headers={'User-agent': 'SlackIt 0.1'})
+    response = requests.get(url, headers={'User-agent': 'Slakkit 0.1'})
     print("Got response {}".format(response))
     return response.json()
 
