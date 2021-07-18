@@ -10,15 +10,23 @@ import slack
 def lambda_handler(event, context):
     print("Reading Slakkit configuration from env vars....")
     target_channel = os.environ.get('slakkit_TARGET_CHANNEL')
-    oauth_secret_name = os.environ.get('slakkit_OAUTH_SECRET_NAME')
-    slack_oauth_token = get_secret(oauth_secret_name).get('api_key')
+    slack_oauth_token = get_slack_oauth_token()
     subreddit_list = os.environ.get('slakkit_SUBREDDIT_LIST').split(',')
 
     reddits = get_random_reddits(subreddit_list)
     reddit = choose_a_reddit(reddits['data']['children'])
     slack_blocks = make_slack_message_blocks(reddit)
-    print("Slack blocks:\n{}".format(slack_blocks))
     send_slack_message(target_channel, slack_oauth_token, slack_blocks)
+
+
+def get_slack_oauth_token():
+    oauth_token = os.environ.get('slakkit_OAUTH_TOKEN')
+    if oauth_token.startswith('xoxb-'):
+        print("Found Slack OAuth token as env var")
+        return oauth_token
+    else:
+        print("Looking for Slack OAuth token in Secrets Manager at {}".format(oauth_token))
+        return get_secret(oauth_token).get('api_key')
 
 
 def get_secret(secret_name):
@@ -33,7 +41,7 @@ def get_secret(secret_name):
 
 
 def make_slack_message_blocks(reddit):
-    return [
+    blocks = [
         {
             "type": "section",
             "text": {
@@ -59,14 +67,13 @@ def make_slack_message_blocks(reddit):
             "type": "divider"
         }
     ]
+    print("Made Slack message blocks: {}".format(blocks))
+    return blocks
 
 
 def send_slack_message(channel, api_token, blocks):
     print('Sending slack message to {} channel...'.format(channel))
-    response = slack.WebClient(api_token).chat_postMessage(
-        channel=channel,
-        blocks=blocks
-    )
+    response = slack.WebClient(api_token).chat_postMessage(channel=channel, blocks=blocks)
     print('Slack API response {}'.format(response))
 
 
