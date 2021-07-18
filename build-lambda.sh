@@ -15,7 +15,7 @@ echo "Installing prod dependencies only..."
 pip install -r requirements.txt
 
 ZIP_DIR=$PWD
-ZIP_NAME=slackit-lambda.zip
+ZIP_NAME=slakkit-lambda.zip
 ZIP_FILE="$ZIP_DIR/$ZIP_NAME"
 
 echo "Packaging the libraries..."
