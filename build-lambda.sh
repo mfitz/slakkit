@@ -18,6 +18,12 @@ ZIP_DIR=$PWD
 ZIP_NAME=slakkit-lambda.zip
 ZIP_FILE="$ZIP_DIR/$ZIP_NAME"
 
+if [[ -f "$ZIP_FILE" ]]; then
+    echo "Deleting old lambda zip file $ZIP_FILE..."
+    rm -rf $ZIP_FILE
+    echo "Deleted $ZIP_FILE"
+fi
+
 echo "Packaging the libraries..."
 pushd $VIRTUAL_ENV/lib/python*/site-packages
 zip -r9 $ZIP_FILE *
@@ -35,4 +41,4 @@ pip install -r env-dependencies.txt
 echo "Removing temp dependencies file..."
 rm -rf env-dependencies.txt
 
-echo "Build finished"
+echo "Build finished, deplyment artefact $ZIP_FILE created"
