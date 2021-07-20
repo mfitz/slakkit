@@ -155,15 +155,16 @@ execution role for you:
 ```
 
 You can create an arbitrarily long list of subreddits of interest as the value of the `slackit_SUBREDDIT_LIST` env var.
-You must:
+Longer lists are better for avoiding duplicate posts. You must:
 
 - enclose the list in quotes
 - use only the short names of subreddits (rather than complete URLs), so `IllegallySmolCats`, for example
 - separate the list using commas
 
 The value of the `slackit_TARGET_CHANNEL` env var should be only the channel name, with no leading hash character, so
-`my-awesome-channel`, *not* `#my-awesome-channel`.
+`my-awesome-channel`, **not** `#my-awesome-channel`.
 
+#### Lambda permissions
 When the newly created execution role exists, add a policy granting permission to read the OAuth token from Secrets
 Manager, for example:
 
