@@ -23,7 +23,7 @@ and a hyperlink to the Reddit website.
 
 
 ## Installing
-You must create a virtual environment, otherwise the build script will complain (it uses the venv to figure out what
+You **must** create a virtual environment, otherwise the build script will complain (it uses the venv to figure out what
 to bundle into the deployment artefact). I highly recommend [PyEnv](https://github.com/pyenv/pyenv) for managing Python
 virtual environments, or you could go low tech and do something like:
 
