@@ -10,9 +10,9 @@ grabs the top posts from that subreddit, shuffles them into random order, and se
 a photo. This selected post is used to make a simple Slack message featuring the title of the post, the photo,
 and a hyperlink to the Reddit website.
 
-<kbd><img src="readme-images/cat-reddit-1.png"/></kbd>
+<kbd><img src="readme-images/cat-reddit-1.png" width="650"/></kbd>
 
-<kbd><img src="readme-images/cat-reddit-2.png"/></kbd>
+<kbd><img src="readme-images/cat-reddit-2.png" width="650"/></kbd>
 
 
 ## Prerequisites
