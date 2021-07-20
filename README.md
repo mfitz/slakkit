@@ -57,27 +57,33 @@ python main.py
 
 ### Creating Slack apps
 To create a new Slack app, use the [Slack web UI](https://api.slack.com/apps?new_app=1). It's
-fairly self-explanatory, but having created a Slack app you will then need to configure it thus:
+fairly self-explanatory, and there are
+[online guides available to help](https://api.slack.com/authentication/basics#creating) if you
+need them.
+
+Having created your Slack app you will then need to configure it thus:
 
 `Add features and functionality > Permissions > Scopes > Bot Token Scopes:` Add OAuth Scopes for `chat:write` &
 `chat:write.public`
 
 Once you have added these permissions, you will be able to click to "install" the app. You will then
-have access to an OAuth Access Token, which you
-[need to make available to AEMon via AWS Secrets Manager](#slack-api-credentials).
+have access to an OAuth Access Token, which you need to make available to Slakkit at runtime, either
+[via AWS Secrets Manager](#slack-api-credentials), or by passing the value directly as an environmental
+variable.
 
 You should also edit the app's `Display Information`, and set up some `Collaborators` who will be able to administer
 the app alongside you.
 
 ### Slack API Credentials
-You **must** add your Slack app's OAuth token (revealed after creating and installing the Slack app) to AWS Secrets
-Manager **in the same AWS account and region** that the Slakkit Lambda will be deployed to. You can name the secret
-whatever you like in Secrets Manager; the name of the secret will later be set as an environmental variable read by
-the Lambda at runtime. However, a name like `slakkit/slack-oauth-token` makes it clear what the secret is for.
+Unless you plan to pass your Slack app's OAuth token directly as an env var, you **must** add it to AWS Secrets
+Manager **in the same AWS account and region** that the Slakkit Lambda will be deployed to. You can name the
+secret whatever you like in Secrets Manager; the name of the secret will later be set as an environmental variable
+read by the Lambda at runtime. However, a descriptive name like `slakkit/slack-oauth-token` makes it clear what
+the secret is for.
 
-I added the secret manually via
+I tend to add secrets to Secrets Manager manually via
 [the AWS console](https://docs.aws.amazon.com/secretsmanager/latest/userguide/manage_create-basic-secret.html)
-, but you could equally use the AWS CLI (see `aws secretsmanager create-secret help`). Select `Other type of secrets
+, but you can also use the AWS CLI (see `aws secretsmanager create-secret help`). Select `Other type of secrets
 (e.g. API key)` as the key type in the console.
 
 The secret **must** contain a name/value pair `api_key:<Slack OAuth token value>`; the Slakkit Lambda expects
