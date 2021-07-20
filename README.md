@@ -4,10 +4,11 @@
 
 Slakkit summarises top Reddit photo posts in Slack messages.
 
-Slakkit can be deployed into AWS as a Lambda function, or run locally as a regular Python application. Every time
-Slakkit runs, it randomly chooses a single subreddit from the list supplied as config, grabs the top posts from that
-subreddit, shuffles them into random order, and selects the first post that is a photo. This selected post is used to
-make a simple Slack message featuring the title of the post, the photo, and a hyperlink to the Reddit website.
+Slakkit can be deployed into AWS as a Lambda function, or run locally (or anywhere else) as a regular Python
+application. Every time Slakkit runs, it randomly chooses a single subreddit from a list supplied as config,
+grabs the top posts from that subreddit, shuffles them into random order, and selects the first post that is
+a photo. This selected post is used to make a simple Slack message featuring the title of the post, the photo,
+and a hyperlink to the Reddit website.
 
 <kbd><img src="readme-images/cat-reddit-1.png"/></kbd>
 
