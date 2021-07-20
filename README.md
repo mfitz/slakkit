@@ -192,8 +192,8 @@ AWS Lambda is an event-driven environment. You can trigger the Slakkit Lambda fu
 [Cloudwatch Rule](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/Create-CloudWatch-Events-Rule.html)
 running on a cron-like schedule in order to automatically run Slakkit at various times of the day/week/month/year. In
 the Lambda console, select `Triggers > Add trigger` and select `EventBridge (CloudWatch Events)`. Select `Create a new
-rule` and choose `Schedule expression` as the `Rule type` and use something like `cron(0 14 * * ? *)` as the
+rule`, choose `Schedule expression` as the `Rule type` and use something like `cron(0 14 * * ? *)` as the
 `Schedule expression`, where `14` is the hour of each day in UTC that you want the Lambda to be triggered. The
 `schedule_expression` can be anything supported by
 [CloudWatch Events schedule syntax](https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents-expressions.html)
-, so you can choose to run every `n` minutes or hours, at specified times on specified days, etc.
+, so you can choose to run every `n` minutes or hours, or at specified times on specified days, etc.
