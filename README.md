@@ -48,7 +48,27 @@ python main.py
 ```
 
 
-## Building the deployment artefact
+## Deploying to AWS Lambda
+
+### Slack API Credentials
+You **must** add your Slack app's OAuth token (revealed after creating and installing the Slack app) to AWS Secrets
+Manager **in the same AWS account and region** that the Slakkit Lambda will be deployed to. You can name the secret
+whatever you like in Secrets Manager; the name of the secret will later be set as an environmental variable read by
+the Lambda at runtime. However, a name like `slakkit/slack-oauth-token` makes it clear what the secret is for.
+
+I added the secret manually via
+[the AWS console](https://docs.aws.amazon.com/secretsmanager/latest/userguide/manage_create-basic-secret.html)
+, but you could equally use the AWS CLI (see `aws secretsmanager create-secret help`). Select `Other type of secrets
+(e.g. API key)` as the key type in the console.
+
+The secret **must** contain a name/value pair `api_key:<Slack OAuth token value>`; the Slakkit Lambda expects
+to retrieve a dictionary from Secrets Manager using the name you supplied and will then interrogate this dictionary
+for the value of `api_key`. So in plain text, your secret's value should look like:
+```json
+{"api_key": "xoxb-01234567890-01234567890123-ABcDefGhIJ1klMnoPqrstuvw"}
+```
+
+### Building the deployment artefact
 To create the zip file to upload to the Lambda environment, from the project root and inside an active virtual env:
 
 ```bash
@@ -79,7 +99,63 @@ The build script:
 - bundles up all of the libraries in the venv plus our own code into a deployment artefact (a zip file)
 - restores your venv to its pre-build state using the backup
 
+### Creating and configuring the Lambda function
+Browse to the Lambda UI in the AWS console, which you can find at a URL like (adjust your region accordingly)
+`https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/functions`. Create a new function, upload the
+zip file, and manually configure the Lambda with the following settings, allowing the Lambda wizard to create a new
+execution role for you:
 
-## Deploying to AWS Lambda
-Create the deployment zip file as per [#building-the-deployment-artefact](Building the deployment artefact).
+```json
+{
+  "Configuration": {
+    "FunctionName": "cats-slakkit",
+    "MemorySize": 128,
+    "PackageType": "Zip",
+    "FunctionArn": "arn:aws:lambda:eu-west-1:123456789012:function:cats-slakkit",
+    "Environment": {
+      "Variables": {
+        "slackit_OAUTH_SECRET_NAME": "slakkit/slack_oauth_token",
+        "slackit_SUBREDDIT_LIST": "IllegallySmolCats,CatsInSinks,cats,Blep",
+        "slackit_TARGET_CHANNEL": "some-channel"
+      }
+    },
+    "Handler": "main.lambda_handler",
+    "Role": "arn:aws:iam::123456789012:role/service-role/cats-slakkit-role-44dl7jp9",
+    "Timeout": 20,
+    "Runtime": "python3.8"
+  }
+}
+```
 
+When the newly created execution role exists, add a policy granting permission to read the OAuth token from Secrets
+Manager, for example:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "secretsmanager:GetResourcePolicy",
+                "secretsmanager:GetSecretValue",
+                "secretsmanager:DescribeSecret",
+                "secretsmanager:ListSecretVersionIds"
+            ],
+            "Resource": "arn:aws:secretsmanager:eu-west-1:123456789012:secret:slackit/*"
+        }
+    ]
+}
+```
+
+### Scheduling the Lambda function
+AWS Lambda is an event-driven environment. You can trigger the Slakkit Lambda function using a
+[Cloudwatch Rule](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/Create-CloudWatch-Events-Rule.html)
+running on a cron-like schedule in order to automatically run Slakkit at various times of the day/week/month/year. In
+the Lambda console, select `Triggers > Add trigger` and select `EventBridge (CloudWatch Events)`. Select `Create a new
+rule` and choose `Schedule expression` as the `Rule type` and use something like `cron(0 14 * * ? *)` as the
+`Schedule expression`, where `14` is the hour of each day in UTC that you want the Lambda to be triggered. The
+`schedule_expression` can be anything supported by
+[CloudWatch Events schedule syntax](https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents-expressions.html)
+, so you can choose to run every `n` minutes or hours, at specified times on specified days, etc.
