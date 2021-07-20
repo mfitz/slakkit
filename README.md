@@ -120,7 +120,7 @@ The build script:
 - backs up the contents of your venv
 - cleans out the venv completely
 - installs into the venv only the minimal set of production dependencies as found in `requirements.txt` - so no
-`pytest`, `flake8` or `boto3` (which is already installed in the AWS Lambda runtime), etc.
+dev dependencies like `pytest`, `flake8` or `boto3` (which is already installed in the AWS Lambda runtime), etc.
 - bundles up all of the libraries in the venv plus Slakkit's own Python code into a deployment artefact (a zip file)
 - restores your venv to its pre-build state using the backup
 
