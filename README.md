@@ -35,10 +35,11 @@ to install `dev-requirements.txt`; `requirements.txt` will be sufficient.
 
 
 ## Running locally
-When you run Slakkit locally, you can choose to pass the Slack app's OAuth token directly as an env var, or indirectly,
-whereby the value of the env var is the name under which the token is stored in AWS Secrets Manager. If you use the
-indirect Secrets Manager option, you must be invoking Slakkit from within an authenticated shell that has permissions
-to read the token secret from Secrets Manager.
+See [Creating Slack apps](#creating-slack-apps) for instructions on how to create your Slack app and generate an OAuth
+token. When you run Slakkit locally, you can choose to pass the Slack app's OAuth token directly as an env var, or
+indirectly, whereby the value of the env var is the name under which the token is stored in AWS Secrets Manager. If you
+use the indirect Secrets Manager option, you must be invoking Slakkit from within an authenticated shell that has
+permissions to read the token secret from Secrets Manager.
 
 ```bash
 slakkit_TARGET_CHANNEL="my-awesome-channel" \
@@ -49,6 +50,20 @@ python main.py
 
 
 ## Deploying to AWS Lambda
+
+### Creating Slack apps
+To create a new Slack app, use the [Slack web UI](https://api.slack.com/apps?new_app=1). It's
+fairly self-explanatory, but having created a Slack app you will then need to configure it thus:
+
+`Add features and functionality > Permissions > Scopes > Bot Token Scopes:` Add OAuth Scopes for `chat:write` &
+`chat:write.public`
+
+Once you have added these permissions, you will be able to click to "install" the app. You will then
+have access to an OAuth Access Token, which you
+[need to make available to AEMon via AWS Secrets Manager](#slack-api-credentials).
+
+You should also edit the app's `Display Information`, and set up some `Collaborators` who will be able to administer
+the app alongside you.
 
 ### Slack API Credentials
 You **must** add your Slack app's OAuth token (revealed after creating and installing the Slack app) to AWS Secrets
@@ -127,6 +142,16 @@ execution role for you:
 }
 ```
 
+You can create an arbitrarily long list of subreddits of interest as the value of the `slackit_SUBREDDIT_LIST` env var.
+You must:
+
+- enclose the list in quotes
+- use only the short names of subreddits (rather than complete URLs), so `IllegallySmolCats`, for example
+- separate the list using commas
+
+The value of the `slackit_TARGET_CHANNEL` env var should be only the channel name, with no leading hash character, so
+`my-awesome-channel`, *not* `#my-awesome-channel`.
+
 When the newly created execution role exists, add a policy granting permission to read the OAuth token from Secrets
 Manager, for example:
 
@@ -143,7 +168,7 @@ Manager, for example:
                 "secretsmanager:DescribeSecret",
                 "secretsmanager:ListSecretVersionIds"
             ],
-            "Resource": "arn:aws:secretsmanager:eu-west-1:123456789012:secret:slackit/*"
+            "Resource": "arn:aws:secretsmanager:eu-west-1:123456789012:secret:slakkit/*"
         }
     ]
 }
