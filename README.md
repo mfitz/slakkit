@@ -1,5 +1,5 @@
 # Slakkit
-Summarise top Reddit photo posts in Slack messages.
+Slakkit summarises top Reddit photo posts in Slack messages.
 
 Slakkit can be deployed into AWS as a Lambda function, or run locally as a regular Python application. Every time
 Slakkit runs, it randomly chooses a single subreddit from the list supplied as config, grabs the top posts from that
