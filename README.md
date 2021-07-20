@@ -1,10 +1,14 @@
 # Slakkit
 Summarise top Reddit photo posts in Slack messages.
 
-<kbd><img src="readme-images/cat-reddit-1.png"/></kbd>
-<kbd><img src="readme-images/cat-reddit-2.png"/></kbd>
+Slakkit can be deployed into AWS as a Lambda function, or run locally as a regular Python application. Every time
+Slakkit runs, it randomly chooses a single subreddit from the list supplied as config, grabs the top posts from that
+subreddit, shuffles them into random order, then selects the first post that is a photo and posts it to Slack as a
+simple message using the title of the post, the photo, and a hyperlink to the post on the Reddit website.
 
-Slakkit can be deployed into AWS as a Lambda function, or run locally as a regular Python application. 
+<kbd><img src="readme-images/cat-reddit-1.png"/></kbd>
+
+<kbd><img src="readme-images/cat-reddit-2.png"/></kbd>
 
 
 ## Prerequisites
@@ -27,14 +31,14 @@ virtual environments, or you could go low tech and do something like:
 ```
 
 If you only plan to build the deployment artefact, rather than run Slakkit locally or make dev changes, you don't need
-to install `dev-requirements.txt` - `requirements.txt` will be sufficient.
+to install `dev-requirements.txt`; `requirements.txt` will be sufficient.
 
 
 ## Running locally
 When you run Slakkit locally, you can choose to pass the Slack app's OAuth token directly as an env var, or indirectly,
 whereby the value of the env var is the name under which the token is stored in AWS Secrets Manager. If you use the
-indirect Secrets Manager option, you must be invokig Slakkit from within an authenticated shell that has permissions
-to read the secret from Secrets Manager.
+indirect Secrets Manager option, you must be invoking Slakkit from within an authenticated shell that has permissions
+to read the token secret from Secrets Manager.
 
 ```bash
 slakkit_TARGET_CHANNEL="my-awesome-channel" \
