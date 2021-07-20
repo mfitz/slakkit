@@ -14,6 +14,8 @@ and a hyperlink to the Reddit website.
 
 <kbd><img src="readme-images/cat-reddit-2.png" width="650"/></kbd>
 
+<kbd><img src="readme-images/cat-reddit-3.png" width="650"/></kbd>
+
 
 ## Prerequisites
 - Python 3.8.1 or greater
