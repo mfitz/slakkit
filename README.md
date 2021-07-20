@@ -1,6 +1,6 @@
 # Slakkit
 
-<img src="slackit-icon-512.png"/>
+<img src="slackit-icon-512.png" style="width:200px;"/>
 
 Slakkit summarises top Reddit photo posts in Slack messages.
 
