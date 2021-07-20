@@ -141,9 +141,9 @@ execution role for you:
     "FunctionArn": "arn:aws:lambda:eu-west-1:123456789012:function:cats-slakkit",
     "Environment": {
       "Variables": {
-        "slackit_OAUTH_SECRET_NAME": "slakkit/slack_oauth_token",
-        "slackit_SUBREDDIT_LIST": "IllegallySmolCats,CatsInSinks,cats,Blep",
-        "slackit_TARGET_CHANNEL": "some-channel"
+        "slakkit_OAUTH_SECRET_NAME": "slakkit/slack_oauth_token",
+        "slakkit_SUBREDDIT_LIST": "IllegallySmolCats,CatsInSinks,cats,Blep",
+        "slakkit_TARGET_CHANNEL": "some-channel"
       }
     },
     "Handler": "main.lambda_handler",
@@ -154,14 +154,14 @@ execution role for you:
 }
 ```
 
-You can create an arbitrarily long list of subreddits of interest as the value of the `slackit_SUBREDDIT_LIST` env var.
+You can create an arbitrarily long list of subreddits of interest as the value of the `slakkit_SUBREDDIT_LIST` env var.
 Longer lists are better for avoiding duplicate posts. You must:
 
 - enclose the list in quotes
 - use only the short names of subreddits (rather than complete URLs), so `IllegallySmolCats`, for example
 - separate the list using commas
 
-The value of the `slackit_TARGET_CHANNEL` env var should be only the channel name, with no leading hash character, so
+The value of the `slakkit_TARGET_CHANNEL` env var should be only the channel name, with no leading hash character, so
 `my-awesome-channel`, **not** `#my-awesome-channel`.
 
 #### Lambda permissions
