@@ -1,4 +1,7 @@
 # Slakkit
+
+<img src="slackit-icon-512.png"/>
+
 Slakkit summarises top Reddit photo posts in Slack messages.
 
 Slakkit can be deployed into AWS as a Lambda function, or run locally as a regular Python application. Every time
