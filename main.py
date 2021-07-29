@@ -80,11 +80,23 @@ def send_slack_message(channel, api_token, blocks):
 def get_random_reddits(subreddit_list):
     subreddit = random.choice(subreddit_list)
     print("Retrieving top posts from {}".format(subreddit))
-    url = "https://www.reddit.com/r/{}/top.json?limit=30&t=month".format(subreddit)
+    page_size = 50 # TODO - make this overrideable via env var
+    request_headers = {'User-agent': 'Slakkit 0.1'}
+    url = "https://www.reddit.com/r/{}/top.json?limit={}&t=month".format(subreddit, page_size)
     print("Requesting {}".format(url))
-    response = requests.get(url, headers={'User-agent': 'Slakkit 0.1'})
+    response = requests.get(url, headers=request_headers)
     print("Got response {}".format(response))
-    return response.json()
+    resp_json = response.json()
+    number_of_posts = len(resp_json['data']['children'])
+    if number_of_posts < page_size:
+        print("Not enough posts in the response, only found {} - asking for more data...".format(number_of_posts))
+        url = "https://www.reddit.com/r/{}/top.json?limit={}&t=year".format(subreddit, page_size)
+        print("Requesting {}".format(url))
+        response = requests.get(url, headers=request_headers)
+        print("Got response {}".format(response))
+        resp_json = response.json()
+        print("New response has {} posts".format(len(resp_json['data']['children'])))
+    return resp_json
 
 
 def choose_a_reddit(reddit_list):
