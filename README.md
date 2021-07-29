@@ -20,24 +20,28 @@ and a hyperlink to the Reddit website.
 ## Prerequisites
 - Python 3.8.1 or greater
 - A list of Reddit subreddits you want to read from
-- Admin permissions on your AWS Account
 - A Slack app and associated User OAuth Token (or permissions enough to create new apps in your Slack space)
+- (If you are deploying to Lambda) Admin permissions on your AWS Account, or at least permissions enough to
+create new Lambda functions
 
 
 ## Installing
-You **must** create a virtual environment, otherwise the build script will complain (it uses the venv to figure out what
-to bundle into the deployment artefact). I highly recommend [PyEnv](https://github.com/pyenv/pyenv) for managing Python
-virtual environments, or you could go low tech and do something like:
+If you want to deploy Slakkit to AWS Lambda, you **must** install into a virtual environment, otherwise the
+lambda build script will complain (it uses the venv to figure out what to bundle up into the deployment artefact).
+In any case, using a virtual environment is
+[generally a good idea](https://towardsdatascience.com/why-you-should-use-a-virtual-environment-for-every-python-project-c17dab3b0fd0).
+I highly recommend [PyEnv](https://github.com/pyenv/pyenv) for managing Python virtual environments, or you
+could go low tech and do something like:
 
 ```bash
  $ python3 -m venv venv
  $ source venv/bin/activate
  $ pip install -r requirements.txt
- $ pip install -r dev-requirements.txt
+ $ pip install -r dev-requirements.txt # only if you will be running locally and/or making dev changes
 ```
 
-If you only plan to build the deployment artefact, rather than run Slakkit locally or make dev changes, you don't need
-to install `dev-requirements.txt`; `requirements.txt` will be sufficient.
+If you only plan to build the Lambda deployment artefact, rather than run Slakkit locally or make dev changes,
+you don't need to install `dev-requirements.txt`; `requirements.txt` will be sufficient.
 
 
 ## Running locally
@@ -47,9 +51,18 @@ indirectly, whereby the value of the env var is the name under which the token i
 use the indirect Secrets Manager option, you must be invoking Slakkit from within an authenticated shell that has
 permissions to read the token secret from Secrets Manager.
 
+**Passing the Slack OAuth token directly:**
 ```bash
 slakkit_TARGET_CHANNEL="my-awesome-channel" \
 slakkit_OAUTH_TOKEN="xoxb-01234567890-01234567890123-ABcDefGhIJ1klMnoPqrstuvw" \
+slakkit_SUBREDDIT_LIST="IllegallySmolCats,CatsInBusinessAttire,blackcats,cats" \
+python main.py
+```
+
+**Passing the Slack OAuth token via AWS Secrets Manager:**
+```bash
+slakkit_TARGET_CHANNEL="my-awesome-channel" \
+slakkit_OAUTH_TOKEN="slakkit/slack-oauth-token" \
 slakkit_SUBREDDIT_LIST="IllegallySmolCats,CatsInBusinessAttire,blackcats,cats" \
 python main.py
 ```
@@ -141,9 +154,9 @@ execution role for you:
     "FunctionArn": "arn:aws:lambda:eu-west-1:123456789012:function:cats-slakkit",
     "Environment": {
       "Variables": {
-        "slackit_OAUTH_SECRET_NAME": "slakkit/slack_oauth_token",
-        "slackit_SUBREDDIT_LIST": "IllegallySmolCats,CatsInSinks,cats,Blep",
-        "slackit_TARGET_CHANNEL": "some-channel"
+        "slakkit_OAUTH_SECRET_NAME": "slakkit/slack_oauth_token",
+        "slakkit_SUBREDDIT_LIST": "IllegallySmolCats,CatsInSinks,cats,Blep",
+        "slakkit_TARGET_CHANNEL": "some-channel"
       }
     },
     "Handler": "main.lambda_handler",
@@ -154,14 +167,14 @@ execution role for you:
 }
 ```
 
-You can create an arbitrarily long list of subreddits of interest as the value of the `slackit_SUBREDDIT_LIST` env var.
+You can create an arbitrarily long list of subreddits of interest as the value of the `slakkit_SUBREDDIT_LIST` env var.
 Longer lists are better for avoiding duplicate posts. You must:
 
 - enclose the list in quotes
 - use only the short names of subreddits (rather than complete URLs), so `IllegallySmolCats`, for example
 - separate the list using commas
 
-The value of the `slackit_TARGET_CHANNEL` env var should be only the channel name, with no leading hash character, so
+The value of the `slakkit_TARGET_CHANNEL` env var should be only the channel name, with no leading hash character, so
 `my-awesome-channel`, **not** `#my-awesome-channel`.
 
 #### Lambda permissions
@@ -192,8 +205,8 @@ AWS Lambda is an event-driven environment. You can trigger the Slakkit Lambda fu
 [Cloudwatch Rule](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/Create-CloudWatch-Events-Rule.html)
 running on a cron-like schedule in order to automatically run Slakkit at various times of the day/week/month/year. In
 the Lambda console, select `Triggers > Add trigger` and select `EventBridge (CloudWatch Events)`. Select `Create a new
-rule` and choose `Schedule expression` as the `Rule type` and use something like `cron(0 14 * * ? *)` as the
+rule`, choose `Schedule expression` as the `Rule type` and use something like `cron(0 14 * * ? *)` as the
 `Schedule expression`, where `14` is the hour of each day in UTC that you want the Lambda to be triggered. The
 `schedule_expression` can be anything supported by
 [CloudWatch Events schedule syntax](https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents-expressions.html)
-, so you can choose to run every `n` minutes or hours, at specified times on specified days, etc.
+, so you can choose to run every `n` minutes or hours, or at specified times on specified days, etc.
