@@ -8,14 +8,15 @@ import slack
 
 
 def lambda_handler(event, context):
+    print("Triggered by event {}".format(event))
     print("Reading Slakkit configuration from env vars....")
     target_channel = os.environ.get('slakkit_TARGET_CHANNEL')
     slack_oauth_token = get_slack_oauth_token()
     subreddit_list = os.environ.get('slakkit_SUBREDDIT_LIST').split(',')
 
-    reddits = get_random_reddits(subreddit_list)
-    reddit = choose_a_reddit(reddits['data']['children'])
-    slack_blocks = make_slack_message_blocks(reddit)
+    reddit_posts = get_random_reddits(subreddit_list)
+    chosen_post = choose_a_reddit(reddit_posts)
+    slack_blocks = make_slack_message_blocks(chosen_post)
     send_slack_message(target_channel, slack_oauth_token, slack_blocks)
 
 
@@ -77,26 +78,24 @@ def send_slack_message(channel, api_token, blocks):
     print('Slack API response {}'.format(response))
 
 
+def get_top_posts(subreddit, page_size, time_period):
+    print("Retrieving top posts from {}".format(subreddit))
+    url = "https://www.reddit.com/r/{}/top.json?limit={}&t={}".format(subreddit, page_size, time_period)
+    print("Requesting {}".format(url))
+    response = requests.get(url, headers={'User-agent': 'Slakkit 0.1'})
+    print("Got response {}".format(response))
+    return response.json()['data']['children']
+
+
 def get_random_reddits(subreddit_list):
     subreddit = random.choice(subreddit_list)
-    print("Retrieving top posts from {}".format(subreddit))
     page_size = 50 # TODO - make this overrideable via env var
-    request_headers = {'User-agent': 'Slakkit 0.1'}
-    url = "https://www.reddit.com/r/{}/top.json?limit={}&t=month".format(subreddit, page_size)
-    print("Requesting {}".format(url))
-    response = requests.get(url, headers=request_headers)
-    print("Got response {}".format(response))
-    resp_json = response.json()
-    number_of_posts = len(resp_json['data']['children'])
-    if number_of_posts < page_size:
-        print("Not enough posts in the response, only found {} - asking for more data...".format(number_of_posts))
-        url = "https://www.reddit.com/r/{}/top.json?limit={}&t=year".format(subreddit, page_size)
-        print("Requesting {}".format(url))
-        response = requests.get(url, headers=request_headers)
-        print("Got response {}".format(response))
-        resp_json = response.json()
-        print("New response has {} posts".format(len(resp_json['data']['children'])))
-    return resp_json
+    subreddit_posts = get_top_posts(subreddit, page_size, 'month')
+    if len(subreddit_posts) < page_size:
+        print("Not enough posts in the response, only found {} - asking for more data...".format(len(subreddit_posts)))
+        subreddit_posts = get_top_posts(subreddit, page_size, 'year')
+        print("New response has {} posts".format(len(subreddit_posts)))
+    return subreddit_posts
 
 
 def choose_a_reddit(reddit_list):
