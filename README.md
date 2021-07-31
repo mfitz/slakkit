@@ -2,13 +2,13 @@
 
 <img src="slackit-icon-512.png" width="200" height="200"/>
 
-Slakkit summarises top Reddit image posts in Slack messages.
+Slakkit converts Reddit image posts to Slack messages.
 
 Slakkit can be deployed into AWS as a Lambda function, or run locally (or anywhere else) as a regular Python
 application. Every time Slakkit runs, it randomly chooses a single subreddit from a list supplied as config,
 grabs the top posts from that subreddit, shuffles them into random order, and selects the first post that is
 an image. This selected post is used to make a simple Slack message featuring the title of the post, the image,
-and a hyperlink to the Reddit website.
+and a hyperlink to the post on the Reddit website.
 
 <kbd><img src="readme-images/cat-reddit-1.png" width="650"/></kbd>
 
