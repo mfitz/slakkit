@@ -8,7 +8,7 @@ import slack
 
 
 def lambda_handler(event, context):
-    print("Triggered by event {}".format(event))
+    print("Triggered by event: {}".format(event))
     print("Reading Slakkit configuration from env vars....")
     target_channel = os.environ.get('slakkit_TARGET_CHANNEL')
     slack_oauth_token = get_slack_oauth_token()
@@ -115,4 +115,4 @@ def choose_a_reddit(reddit_list):
 
 
 if __name__ == '__main__':
-    lambda_handler('Command line event', 'Command line context')
+    lambda_handler('"Command line event"', '"Command line context"')
