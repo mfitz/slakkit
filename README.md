@@ -2,7 +2,7 @@
 
 <img src="slackit-icon-512.png" width="200" height="200"/>
 
-Slakkit summarises top Reddit photo posts in Slack messages.
+Slakkit summarises top Reddit image posts in Slack messages.
 
 Slakkit can be deployed into AWS as a Lambda function, or run locally (or anywhere else) as a regular Python
 application. Every time Slakkit runs, it randomly chooses a single subreddit from a list supplied as config,
