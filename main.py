@@ -110,8 +110,7 @@ def choose_a_reddit(reddit_list):
                 and ('is_gallery' not in reddit['data'] or not reddit['data']['is_gallery']):
             print("Selected a reddit from the list of reddits: {}".format(reddit))
             return reddit
-    raise ValueError('Could not find a reddit with a title and picture from this list of reddits: {}'
-                     .format(reddit_list))
+    raise ValueError('Could not find a suitable image post from this list of reddits: {}'.format(reddit_list))
 
 
 if __name__ == '__main__':
