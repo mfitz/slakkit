@@ -7,7 +7,7 @@ Slakkit summarises top Reddit photo posts in Slack messages.
 Slakkit can be deployed into AWS as a Lambda function, or run locally (or anywhere else) as a regular Python
 application. Every time Slakkit runs, it randomly chooses a single subreddit from a list supplied as config,
 grabs the top posts from that subreddit, shuffles them into random order, and selects the first post that is
-a photo. This selected post is used to make a simple Slack message featuring the title of the post, the photo,
+an image. This selected post is used to make a simple Slack message featuring the title of the post, the image,
 and a hyperlink to the Reddit website.
 
 <kbd><img src="readme-images/cat-reddit-1.png" width="650"/></kbd>
@@ -26,7 +26,7 @@ create new Lambda functions
 
 
 ## Installing
-If you want to deploy Slakkit to AWS Lambda, you **must** install into a virtual environment, otherwise the
+If you want to deploy Slakkit to AWS Lambda, you **must** install into a local virtual environment, otherwise the
 lambda build script will complain (it uses the venv to figure out what to bundle up into the deployment artefact).
 In any case, using a virtual environment is
 [generally a good idea](https://towardsdatascience.com/why-you-should-use-a-virtual-environment-for-every-python-project-c17dab3b0fd0).
@@ -86,8 +86,8 @@ have access to an OAuth Access Token, which you need to make available to Slakki
 [via AWS Secrets Manager](#slack-api-credentials), or by passing the value directly as an environmental
 variable.
 
-You should also edit the app's `Display Information`, and set up some `Collaborators` who will be able to administer
-the app alongside you.
+You should also edit the app's `Display Information`, upload an app icon, and ideally set up some
+`Collaborators` who will be able to administer the app alongside you.
 
 ### Slack API Credentials
 Unless you plan to pass your Slack app's OAuth token directly as an env var, you **must** add it to AWS Secrets
@@ -98,8 +98,8 @@ the secret is for.
 
 I tend to add secrets to Secrets Manager manually via
 [the AWS console](https://docs.aws.amazon.com/secretsmanager/latest/userguide/manage_create-basic-secret.html)
-, but you can also use the AWS CLI (see `aws secretsmanager create-secret help`). Select `Other type of secrets
-(e.g. API key)` as the key type in the console.
+, but you can also use the [AWS CLI](https://aws.amazon.com/cli/) (see `aws secretsmanager create-secret help`).
+Select `Other type of secrets (e.g. API key)` as the key type in the console.
 
 The secret **must** contain a name/value pair `api_key:<Slack OAuth token value>`; the Slakkit Lambda expects
 to retrieve a dictionary from Secrets Manager using the name you supplied and will then interrogate this dictionary
@@ -141,9 +141,9 @@ dev dependencies like `pytest`, `flake8` or `boto3` (which is already installed 
 
 ### Creating and configuring the Lambda function
 Browse to the Lambda UI in the AWS console, which you can find at a URL like (adjust your region accordingly)
-`https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/functions`. Create a new function, upload the
-zip file, and manually configure the Lambda with the following settings, allowing the Lambda wizard to create a new
-execution role for you:
+`https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/functions`. Create a new function, and upload
+the zip file. You should allow the Lambda wizard to create a new execution role for you, and configure the Lambda
+with the following settings:
 
 ```json
 {
@@ -154,7 +154,7 @@ execution role for you:
     "FunctionArn": "arn:aws:lambda:eu-west-1:123456789012:function:cats-slakkit",
     "Environment": {
       "Variables": {
-        "slakkit_OAUTH_SECRET_NAME": "slakkit/slack_oauth_token",
+        "slakkit_OAUTH_TOKEN": "slakkit/slack_oauth_token",
         "slakkit_SUBREDDIT_LIST": "IllegallySmolCats,CatsInSinks,cats,Blep",
         "slakkit_TARGET_CHANNEL": "some-channel"
       }
@@ -178,8 +178,8 @@ The value of the `slakkit_TARGET_CHANNEL` env var should be only the channel nam
 `my-awesome-channel`, **not** `#my-awesome-channel`.
 
 #### Lambda permissions
-When the newly created execution role exists, add a policy granting permission to read the OAuth token from Secrets
-Manager, for example:
+When the newly created execution role exists, add a policy to it granting permission to read the OAuth
+token from Secrets Manager, for example:
 
 ```json
 {
@@ -201,12 +201,15 @@ Manager, for example:
 ```
 
 ### Scheduling the Lambda function
-AWS Lambda is an event-driven environment. You can trigger the Slakkit Lambda function using a
-[Cloudwatch Rule](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/Create-CloudWatch-Events-Rule.html)
-running on a cron-like schedule in order to automatically run Slakkit at various times of the day/week/month/year. In
-the Lambda console, select `Triggers > Add trigger` and select `EventBridge (CloudWatch Events)`. Select `Create a new
-rule`, choose `Schedule expression` as the `Rule type` and use something like `cron(0 14 * * ? *)` as the
-`Schedule expression`, where `14` is the hour of each day in UTC that you want the Lambda to be triggered. The
-`schedule_expression` can be anything supported by
+AWS Lambda is an event-driven environment. You can trigger the Slakkit Lambda function using events generated
+by a [Cloudwatch Rule](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/Create-CloudWatch-Events-Rule.html)
+running on a cron-like schedule, allowing you to automatically run Slakkit at various times of the day/week/month/year.
+In the Lambda console, select `Triggers > Add trigger` and select `EventBridge (CloudWatch Events)`. Select `Create
+a new rule`, choose `Schedule expression` as the `Rule type` and use something like `cron(0 14 * * ? *)` as the
+`Schedule expression`, where `14` is the hour of each day in UTC that you want the Lambda to be triggered. 
+
+The `schedule_expression` can be anything supported by
 [CloudWatch Events schedule syntax](https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents-expressions.html)
-, so you can choose to run every `n` minutes or hours, or at specified times on specified days, etc.
+, so you can choose to run every `n` minutes or hours, or at specified times on specified days, etc. You can create
+as many different rules as you like and point them all at the same Lambda function, so you can create as complicated
+a schedule as you want for running Slakkit.
