@@ -12,7 +12,7 @@ def lambda_handler(event, context):
     print("Reading Slakkit configuration from env vars....")
     target_channel = os.environ.get('slakkit_TARGET_CHANNEL')
     slack_oauth_token = get_slack_oauth_token()
-    subreddit_list = os.environ.get('slakkit_SUBREDDIT_LIST').split(',')
+    subreddit_list = os.environ.get('slakkit_SUBREDDIT_LIST').replace('"', '').split(',')
 
     reddit_posts = get_random_reddits(subreddit_list)
     chosen_post = choose_a_reddit(reddit_posts)
