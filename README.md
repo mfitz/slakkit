@@ -19,11 +19,11 @@ Slakkit turns Reddit image posts into Slack messages.
   - [Scheduling the Lambda function](#scheduling-the-lambda-function)
 
 ## Introduction
-Slakkit can be deployed into AWS as a Lambda function, or run locally (or anywhere else) as a regular Python
-application. Every time Slakkit runs, it randomly chooses a single subreddit from a list supplied as config,
-grabs the top posts from that subreddit, shuffles them into random order, and selects the first post that is
-an image. This selected post is used to make a simple Slack message featuring the title of the post, the image,
-and a hyperlink to the post on the Reddit website.
+Slakkit can be deployed into AWS as a [Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html),
+or run locally (or anywhere else) as a regular Python application. Every time Slakkit runs, it randomly chooses a
+single subreddit from a list supplied as config, grabs the top posts from that subreddit, shuffles them into random
+order, and selects the first post that is an image. This selected post is used to make a simple Slack message
+featuring the title of the post, the image, and a hyperlink to the post on the Reddit website.
 
 <kbd><img src="readme-images/cat-reddit-1.png" width="650"/></kbd>
 
@@ -104,6 +104,8 @@ python main.py
 
 
 ## Deploying to AWS Lambda
+The AWS Lambda environment [automatically retries twice on failure](https://aws.amazon.com/about-aws/whats-new/2019/11/aws-lambda-supports-max-retry-attempts-event-age-asynchronous-invocations/) for functions invoked from Cloudwatch rules, so deploying
+Slakkit to Lambda as described below is a nice way to get some free resilience.
 
 ### Slack API Credentials
 Unless you plan to pass your Slack app's OAuth token directly as an env var, you **must** add it to AWS Secrets
@@ -190,12 +192,7 @@ Longer lists are better for avoiding duplicate posts. You must:
 - separate the list using commas
 
 Note that when you are creating the list as an environmental variable via the Lambda console, you should not
-enclose the list in quotes. If you wrap the list in quotes, Slakkit will interpret the quotes around the first
-and last elements of the list as part of the subreddit name, which will cause an error if either of those
-subreddits is randomly chosen. The Lambda environment [automatically retries twice on failure](https://aws.amazon.com/about-aws/whats-new/2019/11/aws-lambda-supports-max-retry-attempts-event-age-asynchronous-invocations/) for functions invoked
-from Cloudwatch rules, so Slakkit will most likely still sucessfully send a message pulled from a different
-subreddit on one of those retries, but the first and last subreddits in the list will be broken and thus never
-successfully used.
+enclose the list in quotes.
 
 The value of the `slakkit_TARGET_CHANNEL` env var should be only the channel name, with no leading hash character, so
 `my-awesome-channel`, **not** `#my-awesome-channel`.
