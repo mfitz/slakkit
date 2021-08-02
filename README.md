@@ -170,9 +170,16 @@ with the following settings:
 You can create an arbitrarily long list of subreddits of interest as the value of the `slakkit_SUBREDDIT_LIST` env var.
 Longer lists are better for avoiding duplicate posts. You must:
 
-- enclose the list in quotes
-- use only the short names of subreddits (rather than complete URLs), so `IllegallySmolCats`, for example
+- use only the short names of subreddits (rather than complete URLs), so `IllegallySmolCats`, **not** `https://www.reddit.com/r/IllegallySmolCats/`
 - separate the list using commas
+
+Note that when you are creating the list as an environmental variable via the Lambda console, you should not
+enclose the list in quotes. If you wrap the list in quotes, Slakkit will interpret the quotes around the first
+and last elements of the list as part of the subreddit name, which will cause an error if either of those
+subreddits is randomly chosen. The Lambda environment [automatically retries twice on failure](https://aws.amazon.com/about-aws/whats-new/2019/11/aws-lambda-supports-max-retry-attempts-event-age-asynchronous-invocations/) for functions invoked
+from Cloudwatch rules, so Slakkit will most likely still sucessfully send a message pulled from a different
+subreddit on one of those retries, but the first and last subreddits in the list will be broken and thus never
+successfully used.
 
 The value of the `slakkit_TARGET_CHANNEL` env var should be only the channel name, with no leading hash character, so
 `my-awesome-channel`, **not** `#my-awesome-channel`.
