@@ -1,9 +1,24 @@
 # Slakkit
 
-<img src="slackit-icon-512.png" width="200" height="200"/>
+<img src="slackit-icon-512.png" width="100" height="100"/>
 
-Slakkit converts Reddit image posts to Slack messages.
+Slakkit turns Reddit image posts into Slack messages.
 
+## Contents
+
+- [Introduction](#introduction)
+- [Prerequisites](#prerequisites)
+- [Installing](#installing)
+- [Creating Slack apps](#creating-slack-apps)
+- [Running locally](#running-locally)
+- [Deploying to AWS Lambda](#deploying-to-aws-lambda)
+  - [Slack API Credentials](#slack-api-credentials)
+  - [Building the deployment artefact](#building-the-deployment-artefact)
+  - [Creating and configuring the Lambda function](#creating-and-configuring-the-lambda-function)
+    - [Lambda permissions](#lambda-permissions)
+  - [Scheduling the Lambda function](#scheduling-the-lambda-function)
+
+## Introduction
 Slakkit can be deployed into AWS as a Lambda function, or run locally (or anywhere else) as a regular Python
 application. Every time Slakkit runs, it randomly chooses a single subreddit from a list supplied as config,
 grabs the top posts from that subreddit, shuffles them into random order, and selects the first post that is
@@ -20,7 +35,7 @@ and a hyperlink to the post on the Reddit website.
 ## Prerequisites
 - Python 3.8.1 or greater
 - A list of Reddit subreddits you want to read from
-- A Slack app and associated User OAuth Token (or permissions enough to create new apps in your Slack space)
+- A [Slack app and associated User OAuth Token](#creating-slack-apps) (or permissions enough to create new apps in your Slack space)
 - (If you are deploying to Lambda) Admin permissions on your AWS Account, or at least permissions enough to
 create new Lambda functions
 
@@ -42,6 +57,26 @@ could go low tech and do something like:
 
 If you only plan to build the Lambda deployment artefact, rather than run Slakkit locally or make dev changes,
 you don't need to install `dev-requirements.txt`; `requirements.txt` will be sufficient.
+
+
+## Creating Slack apps
+To create a new Slack app, use the [Slack web UI](https://api.slack.com/apps?new_app=1). It's
+fairly self-explanatory, and there are
+[online guides available to help](https://api.slack.com/authentication/basics#creating) if you
+need them.
+
+Having created your Slack app you will then need to configure it thus:
+
+`Add features and functionality > Permissions > Scopes > Bot Token Scopes:` Add OAuth Scopes for `chat:write` &
+`chat:write.public`
+
+Once you have added these permissions, you will be able to click to "install" the app. You will then
+have access to an OAuth Access Token, which you need to make available to Slakkit at runtime, either
+[via AWS Secrets Manager](#slack-api-credentials), or by passing the value directly as an environmental
+variable.
+
+You should also edit the app's `Display Information`, upload an app icon, and ideally set up some
+`Collaborators` who will be able to administer the app alongside you.
 
 
 ## Running locally
@@ -69,25 +104,6 @@ python main.py
 
 
 ## Deploying to AWS Lambda
-
-### Creating Slack apps
-To create a new Slack app, use the [Slack web UI](https://api.slack.com/apps?new_app=1). It's
-fairly self-explanatory, and there are
-[online guides available to help](https://api.slack.com/authentication/basics#creating) if you
-need them.
-
-Having created your Slack app you will then need to configure it thus:
-
-`Add features and functionality > Permissions > Scopes > Bot Token Scopes:` Add OAuth Scopes for `chat:write` &
-`chat:write.public`
-
-Once you have added these permissions, you will be able to click to "install" the app. You will then
-have access to an OAuth Access Token, which you need to make available to Slakkit at runtime, either
-[via AWS Secrets Manager](#slack-api-credentials), or by passing the value directly as an environmental
-variable.
-
-You should also edit the app's `Display Information`, upload an app icon, and ideally set up some
-`Collaborators` who will be able to administer the app alongside you.
 
 ### Slack API Credentials
 Unless you plan to pass your Slack app's OAuth token directly as an env var, you **must** add it to AWS Secrets
