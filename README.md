@@ -42,7 +42,7 @@ create new Lambda functions
 
 ## Installing
 If you want to deploy Slakkit to AWS Lambda, you **must** install into a local virtual environment, otherwise the
-[lambda build script](##building-the-deployment-artefact) will complain (it uses the venv to figure out
+[lambda build script](#building-the-deployment-artefact) will complain (it uses the venv to figure out
 what to bundle up into the deployment artefact). In any case, using a virtual environment is
 [generally a good idea](https://towardsdatascience.com/why-you-should-use-a-virtual-environment-for-every-python-project-c17dab3b0fd0).
 I highly recommend [PyEnv](https://github.com/pyenv/pyenv) for managing Python virtual environments, or you
