@@ -1,6 +1,6 @@
 # Slakkit
 
-<img src="slackit-icon-512.png" width="100" height="100"/>
+<img src="readme-images/slakkit-icon-512.png" width="100" height="100"/>
 
 Slakkit turns Reddit image posts into Slack messages.
 
