@@ -89,7 +89,7 @@ def get_top_posts(subreddit, page_size, time_period):
 
 def get_random_reddits(subreddit_list):
     subreddit = random.choice(subreddit_list)
-    page_size = 50 # TODO - make this overrideable via env var
+    page_size = int(os.environ.get('slakkit_REDDIT_PAGE_SIZE', '50'))
     subreddit_posts = get_top_posts(subreddit, page_size, 'month')
     if len(subreddit_posts) < page_size:
         print("Not enough posts in the response, only found {} - asking for more data...".format(len(subreddit_posts)))
@@ -103,7 +103,7 @@ def choose_a_reddit(reddit_list):
     random.shuffle(reddit_list)
     for reddit in reddit_list:
         if reddit['data']['title'] \
-                and reddit['data']['url_overridden_by_dest'] \
+                and ('url_overridden_by_dest' in reddit['data'] and reddit['data']['url_overridden_by_dest']) \
                 and ('post_hint' in reddit['data'] and reddit['data']['post_hint'] == 'image') \
                 and not reddit['data']['is_video'] \
                 and ('is_gif' not in reddit['data'] or not reddit['data']['is_gif']) \
