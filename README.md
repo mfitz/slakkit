@@ -11,7 +11,7 @@ Slakkit turns Reddit image posts into Slack messages.
 - [Installing](#installing)
 - [Creating Slack apps](#creating-slack-apps)
 - [Running locally](#running-locally)
-- [Randomness and avoiding duplicate posts](#randomness-and-avoiding-duplicate-posts)
+- [Randomness and duplicate posts](#randomness-and-duplicate-posts)
 - [Deploying to AWS Lambda](#deploying-to-aws-lambda)
   - [Slack API Credentials](#slack-api-credentials)
   - [Building the deployment artefact](#building-the-deployment-artefact)
@@ -103,25 +103,36 @@ slakkit_SUBREDDIT_LIST="IllegallySmolCats,CatsInBusinessAttire,blackcats,cats" \
 python main.py
 ```
 
-## Randomness and avoiding duplicate posts
-Slakkit does not keep a persistent record of which Reddit posts it has seen, meaning duplicate messages are possible.
-However, you can do a couple of things to make it less likely that you will see duplicate messages. The more
-unique subreddits you have in `slakkit_SUBREDDIT_LIST`, the less chance there will be of duplication. You can also
-manipulate the contents of the list to ensure some subreddits are more likely to be randomly chosen, and therefore
-likely to be used more often, simply be repeating the subreddits you want to be used more often. For example, using
-the following list makes it twice as likely that the subreddit `IllegallySmolCats` will be chosen, meaning that over
-time you can expect twice as many posts to be pulled from that subreddit compared to the others.
+## Randomness and duplicate posts
+Slakkit does not keep and interrogate a persistent record of which Reddit posts it has seen, so duplicate messages
+are possible, but you can do a few things to make it less likely that you will see them.
+
+In general, the more unique subreddits you have in `slakkit_SUBREDDIT_LIST`, the less chance there will be of duplicate
+messages, so a longer list is _usually_ better. However, there are circumstances where this rule of thumb does not hold,
+because subreddits with low levels of activity are more likely to return the same or a very similar list of top posts
+each time you query them. By contrast, the list of top posts for a very busy subreddit changes regularly. For this
+reason, including only, or mostly, busy subreddits in your list reduces the chance of duplicate messages.
+
+You can also ensure some subreddits are more likely to be randomly chosen, and therefore likely to be used more often,
+simply by repeating the subreddits you want to favour. For example, using the following list makes it twice as likely
+that the subreddit `IllegallySmolCats` will be chosen, meaning that over time you can expect twice as many posts to be
+pulled from that subreddit compared to the others.
 
 `slakkit_SUBREDDIT_LIST="IllegallySmolCats,CatsInBusinessAttire,blackcats,cats,IllegallySmolCats"`
 
+If `IllegallySmolCats` is a very busy subreddit relative to the others in the list, this approach would help reduce
+the chances of seeing duplicate messages. Outside of any concerns about duplication, you can of course also use
+this tactic when you simply want more posts from a particular subreddit. Maybe you just like illegally small cats.
+
 By default, Slakkit queries the Reddit API using a page size of 50, meaning a maximum of 50 posts from the chosen
 subreddit will be returned. You can override this value using the `slakkit_REDDIT_PAGE_SIZE` environmental variable,
-e.g. `slakkit_REDDIT_PAGE_SIZE=75`. The bigger the page size, the less chance of randomly choosing a Reddit post that
-has already been seen.
+e.g. `slakkit_REDDIT_PAGE_SIZE=75`. In general, the bigger the page size, the less chance of Slakkit randomly choosing
+a Reddit post that has already been seen.
 
 ## Deploying to AWS Lambda
-The AWS Lambda environment [automatically retries twice on failure](https://aws.amazon.com/about-aws/whats-new/2019/11/aws-lambda-supports-max-retry-attempts-event-age-asynchronous-invocations/) for functions invoked from Cloudwatch rules, so deploying
-Slakkit to Lambda as described below is a nice way to get some free resilience.
+The AWS Lambda environment [automatically retries twice on failure](https://aws.amazon.com/about-aws/whats-new/2019/11/aws-lambda-supports-max-retry-attempts-event-age-asynchronous-invocations/)
+for functions invoked from Cloudwatch rules, so deploying Slakkit to Lambda as described below is a nice way to get some
+free resilience.
 
 ### Slack API Credentials
 Unless you plan to pass your Slack app's OAuth token directly as an env var, you **must** add it to AWS Secrets
@@ -202,7 +213,7 @@ with the following settings:
 ```
 
 You can create an arbitrarily long list of subreddits of interest as the value of the `slakkit_SUBREDDIT_LIST` env var.
-Longer lists are better for avoiding duplicate posts. You must:
+Longer lists are [usually better for avoiding duplicate posts](#randomness-and-duplicate-posts). You must:
 
 - use only the short names of subreddits (rather than complete URLs), so `IllegallySmolCats`, **not** `https://www.reddit.com/r/IllegallySmolCats/`
 - separate the list using commas
