@@ -102,6 +102,21 @@ slakkit_SUBREDDIT_LIST="IllegallySmolCats,CatsInBusinessAttire,blackcats,cats" \
 python main.py
 ```
 
+## Randomness and avoiding duplicate posts
+Slakkit does not keep a persistent record of which Reddit posts it has seen, meaning duplicate messages are possible.
+However, you can do a couple of things to make it less likely that you will see duplicate messages. The more
+unique subreddits you have in `slakkit_SUBREDDIT_LIST`, the less chance there will be of duplication. You can also
+manipulate the contents of the list to ensure some subreddits are more likely to be randomly chosen, and therefore
+likely to be used more often, simply be repeating the subreddits you want to be used more often. For example, using
+the following list makes it twice as likely that the subreddit `IllegallySmolCats` will be chosen, meaning that over
+time you can expect twice as many posts to be pulled from that subreddit compared to the others.
+
+`slakkit_SUBREDDIT_LIST="IllegallySmolCats,CatsInBusinessAttire,blackcats,cats,IllegallySmolCats"`
+
+By default, Slakkit queries the Reddit API using a page size of 50, meaning a maximum of 50 posts from the chosen
+subreddit will be returned. You can override this value using the `slakkit_REDDIT_PAGE_SIZE` environmental variable,
+e.g. `slakkit_REDDIT_PAGE_SIZE=75`. The bigger the page size, the less chance of randomly choosing a Reddit post that
+has already been seen.
 
 ## Deploying to AWS Lambda
 The AWS Lambda environment [automatically retries twice on failure](https://aws.amazon.com/about-aws/whats-new/2019/11/aws-lambda-supports-max-retry-attempts-event-age-asynchronous-invocations/) for functions invoked from Cloudwatch rules, so deploying
