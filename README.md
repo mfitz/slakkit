@@ -11,6 +11,7 @@ Slakkit turns Reddit image posts into Slack messages.
 - [Installing](#installing)
 - [Creating Slack apps](#creating-slack-apps)
 - [Running locally](#running-locally)
+- [Randomness and avoiding duplicate posts](#randomness-and-avoiding-duplicate-posts)
 - [Deploying to AWS Lambda](#deploying-to-aws-lambda)
   - [Slack API Credentials](#slack-api-credentials)
   - [Building the deployment artefact](#building-the-deployment-artefact)
