@@ -111,7 +111,7 @@ In general, the more unique subreddits you have in `slakkit_SUBREDDIT_LIST`, the
 messages, so a longer list is _usually_ better. However, there are circumstances where this rule of thumb does not hold,
 because subreddits with low levels of activity are more likely to return the same or a very similar list of top posts
 each time you query them. By contrast, the list of top posts for a very busy subreddit changes regularly. For this
-reason, including only, or mostly, busy subreddits in your list reduces the chance of duplicate messages.
+reason, including only, or mostly, "busy" subreddits in your list reduces the chance of duplicate messages.
 
 You can also ensure some subreddits are more likely to be randomly chosen, and therefore likely to be used more often,
 simply by repeating the subreddits you want to favour. For example, using the following list makes it twice as likely
