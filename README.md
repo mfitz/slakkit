@@ -34,7 +34,7 @@ featuring the title of the post, the image, and a hyperlink to the post on the R
 
 
 ## Prerequisites
-- Python 3.8.1 or greater
+- Python 3.8.1 or greater (_probably_ works with other Python 3 versions, but `3.8.1` is the only one I've used with it)
 - A list of Reddit subreddits you want to read from
 - An existing Slack app and associated User OAuth Token, or permissions enough to [create new apps in your Slack space](#creating-slack-apps)
 - (If you are deploying to Lambda) Admin permissions on your AWS Account, or at least permissions enough to
