@@ -1,5 +1,7 @@
 # Slakkit
 
+<script id="asciicast-443899" src="https://asciinema.org/a/443899.js" async></script>
+
 <img src="readme-images/slakkit-icon-512.png" width="100" height="100"/>
 
 Slakkit turns Reddit image posts into Slack messages.
