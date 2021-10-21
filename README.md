@@ -1,6 +1,6 @@
 # Slakkit
 
-[![asciicast](https://asciinema.org/a/443899.svg)](https://asciinema.org/a/443899)
+[![asciicast](https://asciinema.org/a/443899.svg)](https://asciinema.org/a/443899?speed=2)
 
 <img src="readme-images/slakkit-icon-512.png" width="100" height="100"/>
 
