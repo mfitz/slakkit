@@ -1,6 +1,6 @@
 # Slakkit
 
-<script id="asciicast-443899" src="https://asciinema.org/a/443899.js" async></script>
+[![asciicast](https://asciinema.org/a/443899.svg)](https://asciinema.org/a/443899)
 
 <img src="readme-images/slakkit-icon-512.png" width="100" height="100"/>
 
