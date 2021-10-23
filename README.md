@@ -105,7 +105,7 @@ python main.py
 
 ## Randomness and duplicate posts
 Slakkit does not keep and interrogate a persistent record of which Reddit posts it has seen, so duplicate messages
-are possible, but you can do a few things to make it less likely that you will see them.
+are possible. However, you can do a few things to make it less likely that you will see them.
 
 In general, the more unique subreddits you have in `slakkit_SUBREDDIT_LIST`, the less chance there will be of duplicate
 messages, so a longer list is _usually_ better. However, there are circumstances where this rule of thumb does not hold,
