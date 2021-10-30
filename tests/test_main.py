@@ -103,3 +103,22 @@ def test_slack_message_ends_with_divider(some_reddit):
 
     expected_divider_section = {'type': 'divider'}
     assert expected_divider_section == message_blocks[-1], "Slack message does not end with a divider"
+
+
+def test_reads_secrets_from_aws_as_dicts(mocker):
+    mock_client = mocker.MagicMock()
+    mock_client.get_secret_value.return_value = {"SecretString": '{"Thingy": "Whatsit"}'}
+    mocker.patch.object(main.boto3, 'client', return_value=mock_client)
+
+    assert main.get_secret("SomeSecret") == {"Thingy": "Whatsit"}
+
+
+def test_throws_error_when_retrieved_secret_has_no_secret_string(mocker):
+    mock_client = mocker.MagicMock()
+    mock_client.get_secret_value.return_value = {"SecretBinary": b'{"Thingy": "Whatsit"}'}
+    mocker.patch.object(main.boto3, 'client', return_value=mock_client)
+
+    with pytest.raises(ValueError) as raised_error:
+        main.get_secret("SomeSecret") == {"Thingy": "Whatsit"}
+
+    assert raised_error.value.args[0] == "Did not find an appropriate secret under the name 'SomeSecret'"
