@@ -188,7 +188,7 @@ dev dependencies like `pytest`, `flake8` or `boto3` (which is already installed 
 Browse to the Lambda UI in the AWS console, which you can find at a URL like (adjust your region accordingly)
 `https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/functions`. Create a new function, and upload
 the zip file. You should allow the Lambda wizard to create a new execution role for you, and configure the Lambda
-with the following settings:
+with settings that look something like:
 
 ```json
 {
