@@ -1,0 +1,39 @@
+name: CI-Build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+    - uses: actions/cache@v1
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - uses: actions/cache@v1
+      with:
+        path: ~/.cache/pip-dev
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/dev-requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-dev-
+    - name: Install dependencies
+      run: |
+        export ACCEPT_EULA=Y
+        sudo apt-get update
+        python -m pip install --upgrade pip
+        sudo apt-get install ca-certificates
+        export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+        pip install -r requirements.txt
+        pip install -r dev-requirements.txt
+    - name: Linting
+      run: |
+        ./scripts/lint-check.sh
+    - name: Unit tests
+      run: |
+        ./scripts/code-coverage.sh
