@@ -1,3 +1,5 @@
+![](https://github.com/arup-group/slakkit/workflows/CI-Build/badge.svg)
+
 # Slakkit
 
 <img src="readme-images/slakkit-icon-512.png" width="100" height="100"/>
