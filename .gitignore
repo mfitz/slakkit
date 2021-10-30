@@ -127,6 +127,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# PyCharm
 .idea/
+
+# miscellaneous
 slackit-lambda.zip
 slakkit-lambda.zip
+reports/
