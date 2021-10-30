@@ -18,6 +18,8 @@ Slakkit turns Reddit image posts into Slack messages.
   - [Creating and configuring the Lambda function](#creating-and-configuring-the-lambda-function)
     - [Lambda permissions](#lambda-permissions)
   - [Scheduling the Lambda function](#scheduling-the-lambda-function)
+- [Developing Slakkit](#developing-slakkit)
+  - [QA Checks](#qa-checks)
 
 ## Introduction
 Slakkit can be deployed into AWS as a [Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html),
@@ -257,3 +259,60 @@ The `schedule_expression` can be anything supported by
 , so you can choose to run every `n` minutes or hours, or at specified times on specified days, etc. You can create
 as many different rules as you like and point them all at the same Lambda function, so you can create as complicated
 a schedule as you want for running Slakkit.
+
+
+## Developing Slakkit
+If you want to make dev changes to Slakkit, be sure to
+[install both test and dev dependencies into your environment](#installing).
+
+### QA Checks
+To run linting and unit tests, and generate a code coverage report:
+
+```bash
+$ ./scripts/qa-checks.sh
+
+✔ The code is as clean as a baby's bottom! ✔
+
+============================================================================== test session starts ===============================================================================
+
+cachedir: .pytest_cache
+plugins: mock-3.6.1, cov-3.0.0
+collected 4 items
+
+tests/test_main.py::test_propagates_errors_when_sending_slack_messages PASSED                                                                                              [ 25%]
+tests/test_main.py::test_prints_slack_api_response_when_sending_slack_messages PASSED                                                                                      [ 50%]
+tests/test_main.py::test_reads_slack_oauth_token_from_env_var_when_set_directly_as_env_var PASSED                                                                          [ 75%]
+tests/test_main.py::test_reads_slack_oauth_token_from_secrets_when_not_set_directly_as_env_var PASSED                                                                      [100%]
+
+---------- coverage: platform darwin, python 3.8.1-final-0 -----------
+Coverage HTML written to dir reports/coverage
+Coverage XML written to file reports/coverage/coverage.xml
+
+Required test coverage of 35.0% reached. Total coverage: 35.06%
+
+=============================================================================== 4 passed in 0.62s ================================================================================
+```
+
+The code coverage report is written to `reports/coverage/index.html`
+```bash
+$ tree reports
+
+reports
+└── coverage
+    ├── coverage.xml
+    ├── coverage_html.js
+    ├── favicon_32.png
+    ├── index.html
+    ├── jquery.ba-throttle-debounce.min.js
+    ├── jquery.hotkeys.js
+    ├── jquery.isonscreen.js
+    ├── jquery.min.js
+    ├── jquery.tablesorter.min.js
+    ├── keybd_closed.png
+    ├── keybd_open.png
+    ├── main_py.html
+    ├── status.json
+    └── style.css
+
+1 directory, 14 files
+```
