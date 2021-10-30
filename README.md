@@ -1,4 +1,4 @@
-![](https://github.com/arup-group/slakkit/workflows/CI-Build/badge.svg)
+![](https://github.com/mfitz/slakkit/workflows/CI-Build/badge.svg)
 
 # Slakkit
 
