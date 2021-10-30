@@ -218,9 +218,6 @@ Longer lists are [usually better for avoiding duplicate posts](#randomness-and-d
 - use only the short names of subreddits (rather than complete URLs), so `IllegallySmolCats`, **not** `https://www.reddit.com/r/IllegallySmolCats/`
 - separate the list using commas
 
-Note that when you are creating the list as an environmental variable via the Lambda console, you should not
-enclose the list in quotes.
-
 The value of the `slakkit_TARGET_CHANNEL` env var should be only the channel name, with no leading hash character, so
 `my-awesome-channel`, **not** `#my-awesome-channel`.
 
