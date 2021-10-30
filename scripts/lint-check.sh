@@ -2,7 +2,7 @@
 
 pushd "${0%/*}"/..
 
-flake8 . --max-line-length 120 --count --show-source --statistics --exclude=scripts,tests,venv,env
+flake8 . --max-line-length 120 --count --show-source --statistics --exclude=scripts,venv,env
 
 return_code=$?
 
