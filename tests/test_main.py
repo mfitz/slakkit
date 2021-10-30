@@ -13,3 +13,13 @@ def test_propagates_errors_when_sending_slack_messages(mocker):
         main.send_slack_message('some-channel', 'some-token', [])
 
     assert raised_error.value == slack_error, 'Error raised was not the one expected'
+
+
+def test_prints_slack_api_response_when_sending_slack_messages(mocker):
+    mocker.patch.object(slack.WebClient, 'chat_postMessage', return_value='{"Some response stuff"}')
+    mocker.patch.object(main, 'print')
+
+    main.send_slack_message('some-channel', 'some-token', [])
+
+    main.print.assert_any_call('Slack API response: {"Some response stuff"}')
+

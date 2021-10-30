@@ -75,7 +75,7 @@ def make_slack_message_blocks(reddit):
 def send_slack_message(channel, api_token, blocks):
     print('Sending slack message to {} channel...'.format(channel))
     response = slack.WebClient(api_token).chat_postMessage(channel=channel, blocks=blocks)
-    print('Slack API response {}'.format(response))
+    print('Slack API response: {}'.format(response))
 
 
 def get_top_posts(subreddit, page_size, time_period):
