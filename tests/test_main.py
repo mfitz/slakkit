@@ -227,31 +227,43 @@ def test_raises_error_when_no_suitable_reddit_image_is_available():
     assert raised_error.value.args[0] == 'Could not find a suitable image post from this list of reddits: []'
 
 
-def test_choose_an_acceptable_image_post_when_available(a_good_reddit_image_post):
+def test_shuffles_reddit_posts_before_choosing_one(mocker, a_good_reddit_image_post):
+    posts = [a_good_reddit_image_post]
+    mocker.patch.object(main.random, 'shuffle')
+
+    main.choose_a_reddit(posts)
+
+    main.random.shuffle.assert_called_once_with(posts)
+
+
+def test_chooses_an_acceptable_image_post_when_available(a_good_reddit_image_post):
     chosen_post = main.choose_a_reddit([a_good_reddit_image_post])
 
     assert chosen_post == a_good_reddit_image_post
 
 
 def test_ignores_image_posts_that_are_videos(a_good_reddit_image_post):
-    a_good_reddit_image_post['data']['is_video'] = True
+    video_post = a_good_reddit_image_post
+    video_post['data']['is_video'] = True
     with pytest.raises(ValueError) as raised_error:
-        main.choose_a_reddit([a_good_reddit_image_post])
+        main.choose_a_reddit([video_post])
     assert raised_error.value.args[0] == \
-           'Could not find a suitable image post from this list of reddits: {}'.format([a_good_reddit_image_post])
+           'Could not find a suitable image post from this list of reddits: {}'.format([video_post])
 
 
 def test_ignores_image_posts_that_are_galleries(a_good_reddit_image_post):
-    a_good_reddit_image_post['data']['is_gallery'] = True
+    gallery_post = a_good_reddit_image_post
+    gallery_post['data']['is_gallery'] = True
     with pytest.raises(ValueError) as raised_error:
-        main.choose_a_reddit([a_good_reddit_image_post])
+        main.choose_a_reddit([gallery_post])
     assert raised_error.value.args[0] == \
-           'Could not find a suitable image post from this list of reddits: {}'.format([a_good_reddit_image_post])
+           'Could not find a suitable image post from this list of reddits: {}'.format([gallery_post])
 
 
 def test_ignores_image_posts_that_are_gifs(a_good_reddit_image_post):
-    a_good_reddit_image_post['data']['is_gif'] = True
+    gif_post = a_good_reddit_image_post
+    gif_post['data']['is_gif'] = True
     with pytest.raises(ValueError) as raised_error:
-        main.choose_a_reddit([a_good_reddit_image_post])
+        main.choose_a_reddit([gif_post])
     assert raised_error.value.args[0] == \
-           'Could not find a suitable image post from this list of reddits: {}'.format([a_good_reddit_image_post])
+           'Could not find a suitable image post from this list of reddits: {}'.format([gif_post])
