@@ -4,6 +4,7 @@ import slack
 from slack.errors import SlackApiError
 
 import main
+import requests
 
 
 @pytest.fixture()
@@ -122,3 +123,45 @@ def test_throws_error_when_retrieved_secret_has_no_secret_string(mocker):
         main.get_secret("SomeSecret") == {"Thingy": "Whatsit"}
 
     assert raised_error.value.args[0] == "Did not find an appropriate secret under the name 'SomeSecret'"
+
+
+def test_queries_reddit_api_for_top_subreddit_posts(mocker):
+    mocker.patch.object(requests, 'get')
+    mocker.patch.object(requests.get, 'json', return_value={"data": {"children": []}})
+
+    main.get_top_posts('some-reddit', 50, 'month')
+
+    requests.get.assert_called_once_with("https://www.reddit.com/r/some-reddit/top.json?limit=50&t=month",
+                                         headers=mocker.ANY)
+
+
+def test_sets_user_agent_header_when_querying_reddit_api(mocker):
+    mocker.patch.object(requests, 'get')
+    mocker.patch.object(requests.get, 'json', return_value={"data": {"children": []}})
+
+    main.get_top_posts('some-reddit', 50, 'month')
+
+    requests.get.assert_called_once_with(mocker.ANY, headers={'User-agent': 'Slakkit 0.1'})
+
+
+def test_prints_reddit_api_responses(mocker):
+    mock_response = mocker.MagicMock()
+    mock_response.json.return_value = {"kind": "listing", "data": {"children": []}}
+    mocker.patch.object(requests, 'get', return_value=mock_response)
+    mocker.patch.object(main, 'print')
+
+    main.get_top_posts('some-reddit', 50, 'month')
+
+    main.print.assert_any_call("Got response: {}".format(mock_response))
+
+
+def test_extracts_posts_list_from_subreddit_api_responses(mocker):
+    mock_response = mocker.MagicMock()
+    mock_response.json.return_value = {"kind": "listing", "data": {"children": []}}
+    mocker.patch.object(requests, 'get', return_value=mock_response)
+    mocker.patch.object(main, 'print')
+
+    top_posts = main.get_top_posts('some-reddit', 50, 'month')
+
+    assert top_posts == []
+    mock_response.json.assert_called_once()
