@@ -1,10 +1,11 @@
 import os
+
 import pytest
+import requests
 import slack
 from slack.errors import SlackApiError
 
 import main
-import requests
 
 
 @pytest.fixture()
@@ -92,7 +93,7 @@ def test_slack_message_begins_with_reddit_title(some_reddit):
     assert expected_title_section == message_blocks[0], "Slack message does not begin with the expected title section"
 
 
-def test_reddit_image_link_follows_title_in_slack_message(some_reddit):
+def test_reddit_image_follows_title_in_slack_message(some_reddit):
     message_blocks = main.make_slack_message_blocks(some_reddit)
 
     expected_image_section = {
