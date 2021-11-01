@@ -9,18 +9,6 @@ import main
 
 
 @pytest.fixture()
-def some_reddit():
-    yield {
-        "data": {
-            "title": "Dashing neck tie",
-            "subreddit": "CatsInBusinessAttire",
-            "permalink": "https://www.reddit.com/r/CatsInBusinessAttire/comments/psoukm/dashing_neck_tie/",
-            "url_overridden_by_dest": "https://i.imgur.com/NCF8foo.jpg"
-        }
-    }
-
-
-@pytest.fixture()
 def subreddit_list():
     yield ['lions', 'tigers', 'bears']
 
@@ -30,11 +18,12 @@ def a_good_reddit_image_post():
     yield {
         "kind": "t3",
         "data": {
+            "is_video": False,
             "subreddit": "CatsInBusinessAttire",
             "title": "A stray showed up next door with the snazziest striped tie.",
+            "permalink": "https://www.reddit.com/r/CatsInBusinessAttire/comments/psoukm/dashing_neck_tie/",
             "post_hint": "image",
-            "url_overridden_by_dest": "https://i.redd.it/am25oz0yafv71.jpg",
-            "is_video": False
+            "url_overridden_by_dest": "https://i.redd.it/am25oz0yafv71.jpg"
         }
     }
 
@@ -80,47 +69,47 @@ def test_reads_slack_oauth_token_from_secrets_when_set_indirectly(mocker):
         del os.environ['slakkit_OAUTH_TOKEN']
 
 
-def test_slack_message_begins_with_reddit_title(some_reddit):
-    message_blocks = main.make_slack_message_blocks(some_reddit)
+def test_slack_message_begins_with_reddit_title(a_good_reddit_image_post):
+    message_blocks = main.make_slack_message_blocks(a_good_reddit_image_post)
 
     expected_title_section = {
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": "> {}".format(some_reddit['data']['title'])
+            "text": "> {}".format(a_good_reddit_image_post['data']['title'])
         }
     }
     assert expected_title_section == message_blocks[0], "Slack message does not begin with the expected title section"
 
 
-def test_reddit_image_follows_title_in_slack_message(some_reddit):
-    message_blocks = main.make_slack_message_blocks(some_reddit)
+def test_reddit_image_follows_title_in_slack_message(a_good_reddit_image_post):
+    message_blocks = main.make_slack_message_blocks(a_good_reddit_image_post)
 
     expected_image_section = {
         "type": "image",
-        "image_url": "{}".format(some_reddit['data']['url_overridden_by_dest']),
+        "image_url": "{}".format(a_good_reddit_image_post['data']['url_overridden_by_dest']),
         "alt_text": "image"
     }
     assert expected_image_section == message_blocks[1], "Slack message does not have the expected image section"
 
 
-def test_reddit_hyperlink_follows_image_in_slack_message(some_reddit):
-    message_blocks = main.make_slack_message_blocks(some_reddit)
+def test_reddit_hyperlink_follows_image_in_slack_message(a_good_reddit_image_post):
+    message_blocks = main.make_slack_message_blocks(a_good_reddit_image_post)
 
     expected_link_section = {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
                 "text": "Pulled from the <{}|{}> subreddit".format(
-                    'https://www.reddit.com{}'.format(some_reddit['data']['permalink']),
-                    some_reddit['data']['subreddit'])
+                    'https://www.reddit.com{}'.format(a_good_reddit_image_post['data']['permalink']),
+                    a_good_reddit_image_post['data']['subreddit'])
             }
         }
     assert expected_link_section == message_blocks[2], "Slack message does not have the expected hyperlink section"
 
 
-def test_slack_message_ends_with_divider(some_reddit):
-    message_blocks = main.make_slack_message_blocks(some_reddit)
+def test_slack_message_ends_with_divider(a_good_reddit_image_post):
+    message_blocks = main.make_slack_message_blocks(a_good_reddit_image_post)
 
     expected_divider_section = {'type': 'divider'}
     assert expected_divider_section == message_blocks[-1], "Slack message does not end with a divider"
