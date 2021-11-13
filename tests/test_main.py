@@ -97,14 +97,14 @@ def test_reddit_hyperlink_follows_image_in_slack_message(a_good_reddit_image_pos
     message_blocks = main.make_slack_message_blocks(a_good_reddit_image_post)
 
     expected_link_section = {
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": "Pulled from the <{}|{}> subreddit".format(
-                    'https://www.reddit.com{}'.format(a_good_reddit_image_post['data']['permalink']),
-                    a_good_reddit_image_post['data']['subreddit'])
-            }
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": "Pulled from the <{}|{}> subreddit".format(
+                'https://www.reddit.com{}'.format(a_good_reddit_image_post['data']['permalink']),
+                a_good_reddit_image_post['data']['subreddit'])
         }
+    }
     assert expected_link_section == message_blocks[2], "Slack message does not have the expected hyperlink section"
 
 
