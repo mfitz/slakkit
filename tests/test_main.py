@@ -28,7 +28,7 @@ def a_good_reddit_image_post():
     }
 
 
-def test_propagates_errors_when_sending_slack_messages(mocker):
+def test_propagates_slack_client_errors(mocker):
     slack_error = SlackApiError("OOPSY DAISY!", 'some-response')
     mocker.patch.object(slack.WebClient, 'chat_postMessage', side_effect=slack_error)
 
