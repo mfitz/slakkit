@@ -112,7 +112,7 @@ Slakkit does not keep and interrogate a persistent record of which Reddit posts 
 are possible. However, you can do a few things to make it less likely that you will see them.
 
 In general, the more unique subreddits you have in `slakkit_SUBREDDIT_LIST`, the less chance there will be of duplicate
-messages, so a longer list is _usually_ better. However, there are circumstances where this rule of thumb does not hold,
+messages, so a longer list is _usually_ better. There are circumstances where this rule of thumb does not hold,
 because subreddits with low levels of activity are more likely to return the same or a very similar list of top posts
 each time you query them. By contrast, the list of top posts for a very busy subreddit changes regularly. For this
 reason, including only, or mostly, "busy" subreddits in your list reduces the chance of duplicate messages.
