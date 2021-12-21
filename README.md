@@ -138,6 +138,10 @@ The AWS Lambda environment [automatically retries twice on failure](https://aws.
 for functions invoked from Cloudwatch rules, so deploying Slakkit to Lambda as described below is a nice way to get some
 free resilience.
 
+If you deploy Slakkit as described below, the resultant AWS architecture will look like:
+
+<kbd><img src="readme-images/slakkit-new-aws-architecture.png" width="650"/></kbd>
+
 ### Slack API Credentials
 Unless you plan to pass your Slack app's OAuth token directly as an env var, you **must** add it to AWS Secrets
 Manager **in the same AWS account and region** that the Slakkit Lambda will be deployed to. You can name the
