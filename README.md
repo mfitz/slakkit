@@ -140,7 +140,7 @@ free resilience.
 
 If you deploy Slakkit as described below, the resultant AWS architecture will look like:
 
-<kbd><img src="readme-images/slakkit-new-aws-architecture.png" width="650"/></kbd>
+<kbd><img src="readme-images/slakkit-new-aws-architecture.png"/></kbd>
 
 ### Slack API Credentials
 Unless you plan to pass your Slack app's OAuth token directly as an env var, you **must** add it to AWS Secrets
