@@ -90,7 +90,7 @@ You should also edit the app's `Display Information`, upload an app icon, and id
 See [Creating Slack apps](#creating-slack-apps) for instructions on how to create your Slack app and generate an OAuth
 token. When you run Slakkit locally, you can choose to pass the Slack app's OAuth token directly as an env var, or
 indirectly, whereby the value of the env var is the name under which the token is stored in AWS Secrets Manager. If you
-use the indirect Secrets Manager option, you must be invoking Slakkit from within an authenticated shell that has
+use the indirect Secrets Manager option, you must be invoking Slakkit from within an authenticated context that has
 permissions to read the token secret from Secrets Manager.
 
 **Passing the Slack OAuth token directly:**
