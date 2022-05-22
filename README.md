@@ -138,9 +138,7 @@ a Reddit post that has already been seen.
 ## Deploying to AWS Lambda
 The AWS Lambda environment [automatically retries twice on failure](https://aws.amazon.com/about-aws/whats-new/2019/11/aws-lambda-supports-max-retry-attempts-event-age-asynchronous-invocations/)
 for functions invoked from Cloudwatch rules, so deploying Slakkit to Lambda as described below is a nice way to get some
-free resilience.
-
-If you deploy Slakkit as described below, the resultant AWS architecture will look like:
+free resilience. The resultant AWS architecture looks like:
 
 <kbd><img src="readme-images/slakkit-new-aws-architecture.png"/></kbd>
 
