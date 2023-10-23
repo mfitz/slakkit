@@ -4,7 +4,7 @@ import random
 
 import boto3
 import requests
-import slack
+import slack_sdk
 
 
 def lambda_handler(event, context):
@@ -74,7 +74,7 @@ def make_slack_message_blocks(reddit):
 
 def send_slack_message(channel, api_token, blocks):
     print('Sending slack message to {} channel...'.format(channel))
-    response = slack.WebClient(api_token).chat_postMessage(channel=channel, blocks=blocks)
+    response = slack_sdk.WebClient(api_token).chat_postMessage(channel=channel, blocks=blocks, unfurl_links=False)
     print('Slack API response: {}'.format(response))
 
 
