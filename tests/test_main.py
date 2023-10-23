@@ -2,8 +2,8 @@ import os
 
 import pytest
 import requests
-import slack
-from slack.errors import SlackApiError
+import slack_sdk
+from slack_sdk.errors import SlackApiError
 
 import main
 
@@ -30,7 +30,7 @@ def a_good_reddit_image_post():
 
 def test_propagates_slack_client_errors(mocker):
     slack_error = SlackApiError("OOPSY DAISY!", 'some-response')
-    mocker.patch.object(slack.WebClient, 'chat_postMessage', side_effect=slack_error)
+    mocker.patch.object(slack_sdk.WebClient, 'chat_postMessage', side_effect=slack_error)
 
     with pytest.raises(SlackApiError) as raised_error:
         main.send_slack_message('some-channel', 'some-token', [])
@@ -40,7 +40,7 @@ def test_propagates_slack_client_errors(mocker):
 
 def test_prints_slack_api_response_when_sending_slack_messages(mocker):
     response = {"Stuff": "Some response stuff"}
-    mocker.patch.object(slack.WebClient, 'chat_postMessage', return_value=response)
+    mocker.patch.object(slack_sdk.WebClient, 'chat_postMessage', return_value=response)
     mocker.patch.object(main, 'print')
 
     main.send_slack_message('some-channel', 'some-token', [])
