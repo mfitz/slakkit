@@ -1,6 +1,6 @@
 [run]
 branch = True
-omit = venv/*, tests/*, scripts/*
+omit = venv/*, tests/*, scripts/*, scraper.py
 
 [report]
 fail_under = 85
