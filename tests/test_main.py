@@ -5,6 +5,8 @@ import requests
 import slack_sdk
 from slack_sdk.errors import SlackApiError
 
+import _version
+
 import main
 
 
@@ -150,7 +152,7 @@ def test_sets_user_agent_header_when_querying_reddit_api(mocker):
 
     main.get_top_posts('some-reddit', 50, 'month')
 
-    requests.get.assert_called_once_with(mocker.ANY, headers={'User-agent': 'Slakkit 0.1'})
+    requests.get.assert_called_once_with(mocker.ANY, headers={'User-agent': 'Slakkit {}'.format(_version.__version__)})
 
 
 def test_prints_reddit_api_responses(mocker):

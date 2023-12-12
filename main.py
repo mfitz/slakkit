@@ -6,6 +6,8 @@ import boto3
 import requests
 import slack_sdk
 
+from _version import __version__
+
 
 def lambda_handler(event, context):
     print("Triggered by event: {}".format(event))
@@ -82,7 +84,7 @@ def get_top_posts(subreddit, page_size, time_period):
     print("Retrieving top posts from {}".format(subreddit))
     url = "https://www.reddit.com/r/{}/top.json?limit={}&t={}".format(subreddit, page_size, time_period)
     print("Requesting {}".format(url))
-    response = requests.get(url, headers={'User-agent': 'Slakkit 0.1'})
+    response = requests.get(url, headers={'User-agent': 'Slakkit {}'.format(__version__)})
     print("Got response: {}".format(response))
     return response.json()['data']['children']
 
