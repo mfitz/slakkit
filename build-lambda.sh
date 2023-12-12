@@ -14,8 +14,9 @@ pip uninstall -y -r env-dependencies.txt
 echo "Installing prod dependencies only..."
 pip install -r requirements.txt
 
+VERSION=$(cat _version.py | grep "__version__" | awk -F '= "' '{print $2}' | awk -F '"' '{print $1}')
 ZIP_DIR=$PWD
-ZIP_NAME=slakkit-lambda.zip
+ZIP_NAME=slakkit-lambda-v$VERSION.zip
 ZIP_FILE="$ZIP_DIR/$ZIP_NAME"
 
 if [[ -f "$ZIP_FILE" ]]; then
