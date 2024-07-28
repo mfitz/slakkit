@@ -84,7 +84,11 @@ def get_top_posts(subreddit, page_size, time_period):
     print("Retrieving top posts from {}".format(subreddit))
     url = "https://www.reddit.com/r/{}/top.json?limit={}&t={}".format(subreddit, page_size, time_period)
     print("Requesting {}".format(url))
-    response = requests.get(url, headers={'User-agent': 'Slakkit {}'.format(__version__)})
+    request_headers = {
+        'User-agent': 'Slakkit {}'.format(__version__),
+        'Cookie': 'reddit_session=123456789012345'
+    }
+    response = requests.get(url, headers=request_headers)
     print("Got response: {}".format(response))
     return response.json()['data']['children']
 

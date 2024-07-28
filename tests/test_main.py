@@ -152,7 +152,20 @@ def test_sets_user_agent_header_when_querying_reddit_api(mocker):
 
     main.get_top_posts('some-reddit', 50, 'month')
 
-    requests.get.assert_called_once_with(mocker.ANY, headers={'User-agent': 'Slakkit {}'.format(_version.__version__)})
+    request_headers = requests.get.call_args_list[0][1]['headers']
+    assert 'User-agent' in request_headers
+    assert request_headers['User-agent'] == 'Slakkit {}'.format(_version.__version__)
+
+
+def test_sets_cookie_header_when_querying_reddit_api(mocker):
+    mocker.patch.object(requests, 'get')
+    mocker.patch.object(requests.get, 'json', return_value={"data": {"children": []}})
+
+    main.get_top_posts('some-reddit', 50, 'month')
+
+    request_headers = requests.get.call_args_list[0][1]['headers']
+    assert 'Cookie' in request_headers
+    assert request_headers['Cookie'] == 'reddit_session=123456789012345'
 
 
 def test_prints_reddit_api_responses(mocker):
