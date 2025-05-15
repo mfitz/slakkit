@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- DeepWiki badge in README
 - Use version number in Reddit HTTP request user-agent header (#3)
 - Use version number in build artefact (#4)
 - Set session cookie in Reddit HTTP requests (#6)
