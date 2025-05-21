@@ -7,6 +7,17 @@
 
 Slakkit turns Reddit image posts into Slack messages.
 
+## Alternative Documentation
+
+In addition to the documentation below, I have also used [DeepWiki](https://deepwiki.com/) to generate some
+"deep docs" at https://deepwiki.com/mfitz/slakkit. In addition to being very detailed and comprehensive, they can also
+be queried using natural language. Here are a couple of example questions I asked by way of a road test; the answers
+are impressively detailed and accurate:
+
+- [How would I invoke Slakkit locally as a standard Python application?](https://deepwiki.com/search/how-would-i-invoke-slakkit-loc_f7a5e94a-fc36-4460-86ce-0a6465b3d08b)
+
+- [How can I make it less likely that Slakkit posts duplicate photos?](https://deepwiki.com/search/how-can-i-make-it-less-likely_9ff86753-fa6f-4316-8fb7-805e2a784b70)
+
 ## Contents
 
 - [Introduction](#introduction)
