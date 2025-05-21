@@ -1,4 +1,4 @@
-![](https://github.com/mfitz/slakkit/workflows/CI-Build/badge.svg)
+[![CI Results](https://github.com/mfitz/slakkit/workflows/CI-Build/badge.svg)](https://github.com/mfitz/slakkit/actions/workflows/ci-build.yml)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/mfitz/slakkit)
 
 # Slakkit
