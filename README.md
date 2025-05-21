@@ -18,6 +18,8 @@ are impressively detailed and accurate:
 
 - [How can I make it less likely that Slakkit posts duplicate photos?](https://deepwiki.com/search/how-can-i-make-it-less-likely_9ff86753-fa6f-4316-8fb7-805e2a784b70)
 
+- [How does Slakkit avoid posting non-image posts to Slack](https://deepwiki.com/search/how-does-slakkit-avoid-posting_981365a0-d944-4efe-92bf-ddb46a17a8cc)
+
 ## Contents
 
 - [Introduction](#introduction)
