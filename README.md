@@ -10,7 +10,7 @@ Slakkit turns Reddit image posts into Slack messages.
 ## Alternative Documentation
 
 In addition to the documentation below, I have also used [DeepWiki](https://deepwiki.com/) to generate some
-"deep docs" at https://deepwiki.com/mfitz/slakkit. In addition to being very detailed and comprehensive, they can also
+"deep docs" at https://deepwiki.com/mfitz/slakkit. They are very detailed and comprehensive, and they can also
 be queried using natural language. Here are a couple of example questions I asked by way of a road test; the answers
 are impressively detailed and accurate:
 
